@@ -153,13 +153,12 @@ Shape.prototype.fall = function (drop, time) {
 }
 
 // make it rain
-setInterval(function () {
-  for (i = 0; i < 50; i ++) {
-    circ = new Circle(ctx, getRandomInt(0, canvasWidth), getRandomInt(0, canvasHeight) - canvasHeight, 2, null, null, 'white');
-    circ.draw();
-    circ.fall(2, 15);
-  }
-}, 2000);
+for (i = 0; i < 2500; i ++) {
+  circ = new Circle(ctx, getRandomInt(0, canvasWidth), getRandomInt(0, canvasHeight), 1, null, null, 'white');
+  circ.draw();
+  // circ.fall(2, 15); // NOTE: the stars used to be constantly moving on a setInterval, but canvas is slow
+                        // and it was too laggy / barely worked on firefox
+}
 
 function Player(boxHeight, boxWidth) {
   this.boxHeight = boxHeight;
@@ -167,61 +166,80 @@ function Player(boxHeight, boxWidth) {
   this.health = 10;
 }
 
-Player.prototype.draw = function() {
-  ctx2.save();
-  // ctx2.scale(.25, .25);
+Player.prototype.draw = function(c) {
+  c.save();
+  c.scale(1, .45);
+  c.translate(-80, -100);
 
-  ctx2.fillStyle = "#00FF00";
+  c.fillStyle = "#00FF00";
   //body
-  ctx2.fillRect(250, 180, 190, 150); //main body
-  ctx2.fillRect(230, 295, 190, 95); //left bott
-  ctx2.fillRect(250, 280, 210, 110); //right bott
-  ctx2.fillRect(235, 180, 20, 40); //left top
-  ctx2.fillRect(265, 140, 58, 40); //top left
-  ctx2.fillRect(380, 130, 40, 60); //top right
+  c.fillRect(250, 180, 190, 150); //main body
+  c.fillRect(230, 295, 190, 95); //left bott
+  c.fillRect(250, 280, 210, 110); //right bott
+  c.fillRect(235, 180, 20, 40); //left top
+  c.fillRect(265, 140, 58, 40); //top left
+  c.fillRect(380, 130, 40, 60); //top right
 
   // //legs
-  ctx2.fillStyle = "Blue";
-  ctx2.fillRect(305, 390, 15, 15); //leg 1
-  ctx2.fillRect(255, 405, 65, 10);
+  c.fillStyle = "Blue";
+  c.fillRect(305, 390, 15, 15); //leg 1
+  c.fillRect(255, 405, 65, 10);
 
-  ctx2.fillRect(365, 390, 15, 15); //leg 2
-  ctx2.fillRect(365, 405, 65, 10);
+  c.fillRect(365, 390, 15, 15); //leg 2
+  c.fillRect(365, 405, 65, 10);
 
   //face
-  ctx2.fillRect(312, 315, 63, 13); //mouth
-  ctx2.fillRect(290, 250, 30, 15); //left eye
-  ctx2.fillRect(360, 250, 30, 15); //right eye
+  c.fillRect(312, 315, 63, 13); //mouth
+  c.fillRect(290, 250, 30, 15); //left eye
+  c.fillRect(360, 250, 30, 15); //right eye
 
   // //eyebrows
-  ctx2.lineWidth = 7.5;
-  ctx2.strokeStyle = "Blue";
-  ctx2.beginPath();
-  ctx2.moveTo(265, 260);
-  ctx2.lineTo(305, 220);
-  ctx2.stroke();
+  c.lineWidth = 7.5;
+  c.strokeStyle = "Blue";
+  c.beginPath();
+  c.moveTo(265, 260);
+  c.lineTo(305, 220);
+  c.stroke();
 
-  ctx2.beginPath();
-  ctx2.moveTo(420, 260);
-  ctx2.lineTo(370, 220);
-  ctx2.stroke();
+  c.beginPath();
+  c.moveTo(420, 260);
+  c.lineTo(370, 220);
+  c.stroke();
 
-  ctx2.restore();
+  c.restore();
 };
  // test to draw player; need to fix sizing
 var p = new Player(200,200);
 // ctx2.save();
 // ctx2.translate(400, 400);
-// p.draw();
+p.draw(ctx);
 // ctx2.restore();
 
 setInterval(function () {
   setTimeout(function () {
-    for (i = 1; i < getRandomInt(1,6); i ++) {
+    for (i = 1; i < getRandomInt(4,9); i ++) {
       // if (i % 2 != 0) continue;
-      circ = new Circle (ctx2, 100 * i + getRandomInt(125, 275), -10, 15, null, null, '#E6BE50', true);
+      circ = new Circle (ctx2, getRandomInt(90, 110) * i, 140, 15, null, null, 'red', true);
       circ.draw();
-      circ.fall(2, 12);
+      circ.fall(2, 8);
     }
-  }, getRandomInt(2000, 5000));
+  }, getRandomInt(1500, 3500));
 }, 2000);
+
+player = new Shape(ctx2, 250, 600, 60, 50, 'red');
+player.draw();
+
+window.addEventListener('keydown', function (e) {
+  var defDist = 15;
+  switch (e.keyCode) {
+    case 39:
+      player.moveRight(defDist);
+      break;
+    case 37:
+      player.moveRight(-1 * defDist);
+      break;
+    default:
+      console.log('no case');
+      break;
+  }
+});
