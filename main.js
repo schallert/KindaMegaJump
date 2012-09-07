@@ -242,7 +242,8 @@ Player.prototype.draw = function(c) {
   c.restore();
 };
 
-Player.prototype.drawMeatwad = function(x, y){
+Player.prototype.drawMeatwad = function(x, y, meatWad){
+  this.meatWad = meatWad || false;
   this.x = x || canvas2Width/2;
   this.y = y || canvas2Height - 50;
   prefs.meatWadX = this.x;
@@ -280,10 +281,17 @@ Player.prototype.moveMeatwad = function (dist) {
   this.drawMeatwad(this.x + dist, this.y);
 }
 
-Player.prototype.healthHit = function () {
-  this.health -= 1;
-  if (this.health <= 0)
-    alert("YOU DEAD");
+Player.prototype.healthHit = function (noHit) {
+  if (!noHit)
+    this.health -= 1;
+  if (this.meatWad) {
+    ctx2.clearRect(425, 10, 150, 125);
+    ctx2.font = "100px sans-serif";
+    ctx2.fillStyle = "blue";
+    ctx2.fillText(p.health, 425, 100);
+  }
+  // if (this.health <= 0)
+    // alert("YOU DEAD");
 }
 
 Player.prototype.shoot = function () {
@@ -298,8 +306,10 @@ var p = new Player();
 g.draw(ctx);
 g.health = 100;
 prefs.green = g;
-p.drawMeatwad();
+
+p.drawMeatwad(null, null, true);
 prefs.meatWad = p;
+p.healthHit(true);
 
 setInterval(function () {
   setTimeout(function () {
