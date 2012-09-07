@@ -157,56 +157,59 @@ setInterval(function () {
   }
 }, 2000);
 
-function Player(boxHeight, boxWidth) {
+
+function Player(boxHeight, boxWidth, x, y) {
   this.boxHeight = boxHeight;
   this.boxWidth = boxWidth;
   this.health = 10;
+  this.x = x || 250;
+  this.y = y || 250;
 }
 
 Player.prototype.draw = function() {
   ctx2.save();
   // ctx2.scale(.25, .25);
-
   ctx2.fillStyle = "#00FF00";
-  //body
-  ctx2.fillRect(250, 180, 190, 150); //main body
-  ctx2.fillRect(230, 295, 190, 95); //left bott
-  ctx2.fillRect(250, 280, 210, 110); //right bott
-  ctx2.fillRect(235, 180, 20, 40); //left top
-  ctx2.fillRect(265, 140, 58, 40); //top left
-  ctx2.fillRect(380, 130, 40, 60); //top right
+  ctx2.fillRect(250, 130, 230, 260); //whole box
+  ctx2.clearRect(250, 220, 20, 75); //clear left mid
+  ctx2.clearRect(250, 130, 30, 50); //clear left top
+  ctx2.clearRect(250, 130, 5, 95); //trim left
+  ctx2.clearRect(460, 130, 20, 150); //clear right
+  ctx2.clearRect(440, 130, 20, 50); //clear top right
+  ctx2.clearRect(340, 130, 60, 50); //clear top mid
+  ctx2.clearRect(280, 130, 60, 10); //trim top left
 
-  // //legs
   ctx2.fillStyle = "Blue";
-  ctx2.fillRect(305, 390, 15, 15); //leg 1
-  ctx2.fillRect(255, 405, 65, 10);
+  ctx2.fillRect(325, 390, 15, 15); //leg 1
+  ctx2.fillRect(275, 405, 65, 10);
 
-  ctx2.fillRect(365, 390, 15, 15); //leg 2
-  ctx2.fillRect(365, 405, 65, 10);
+  ctx2.fillRect(385, 390, 15, 15); //leg 2
+  ctx2.fillRect(385, 405, 65, 10);
 
   //face
-  ctx2.fillRect(312, 315, 63, 13); //mouth
-  ctx2.fillRect(290, 250, 30, 15); //left eye
-  ctx2.fillRect(360, 250, 30, 15); //right eye
+  ctx2.fillRect(332, 315, 63, 13); //mouth
+  ctx2.fillRect(310, 250, 30, 15); //left eye
+  ctx2.fillRect(380, 250, 30, 15); //right eye
 
   // //eyebrows
   ctx2.lineWidth = 7.5;
   ctx2.strokeStyle = "Blue";
   ctx2.beginPath();
-  ctx2.moveTo(265, 260);
-  ctx2.lineTo(305, 220);
+  ctx2.moveTo(285, 260);
+  ctx2.lineTo(325, 220);
   ctx2.stroke();
 
   ctx2.beginPath();
-  ctx2.moveTo(420, 260);
-  ctx2.lineTo(370, 220);
+  ctx2.moveTo(440, 260);
+  ctx2.lineTo(390, 220);
   ctx2.stroke();
 
   ctx2.restore();
 };
+
  // test to draw player; need to fix sizing
 var p = new Player(200,200);
-// ctx2.save();
+ //ctx2.save();
 // ctx2.translate(400, 400);
-// p.draw();
+p.draw();
 // ctx2.restore();
