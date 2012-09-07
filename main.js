@@ -150,13 +150,12 @@ Shape.prototype.fall = function (drop, time) {
 }
 
 // make it rain
-setInterval(function () {
-  for (i = 0; i < 50; i ++) {
-    var circ = new Circle(ctx, getRandomInt(0, canvasWidth), getRandomInt(0, canvasHeight) - canvasHeight, 2, null, null, 'white');
-    circ.draw();
-    circ.fall(5, 15);
-  }
-}, 2000);
+for (i = 0; i < 2500; i ++) {
+  circ = new Circle(ctx, getRandomInt(0, canvasWidth), getRandomInt(0, canvasHeight), 1, null, null, 'white');
+  circ.draw();
+  // circ.fall(2, 15); // NOTE: the stars used to be constantly moving on a setInterval, but canvas is slow
+                        // and it was too laggy / barely worked on firefox
+}
 
 
 function Player(x, y) {
@@ -165,6 +164,7 @@ function Player(x, y) {
   this.y = y || 250;
 }
 
+<<<<<<< HEAD
 Player.prototype.draw = function() {
   ctx2.save();
   ctx2.fillStyle = "#00FF00";
@@ -242,3 +242,32 @@ var p = new Player(200,200);
 p.draw();
 p.drawMeatwad();
 // ctx2.restore();
+
+setInterval(function () {
+  setTimeout(function () {
+    for (i = 1; i < getRandomInt(4,9); i ++) {
+      // if (i % 2 != 0) continue;
+      circ = new Circle (ctx2, getRandomInt(90, 110) * i, 140, 15, null, null, 'red', true);
+      circ.draw();
+      circ.fall(2, 8);
+    }
+  }, getRandomInt(1500, 3500));
+}, 2000);
+
+player = new Shape(ctx2, 250, 600, 60, 50, 'red');
+player.draw();
+
+window.addEventListener('keydown', function (e) {
+  var defDist = 15;
+  switch (e.keyCode) {
+    case 39:
+      player.moveRight(defDist);
+      break;
+    case 37:
+      player.moveRight(-1 * defDist);
+      break;
+    default:
+      console.log('no case');
+      break;
+  }
+});
