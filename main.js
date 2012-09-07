@@ -156,3 +156,50 @@ setInterval(function () {
     circ.fall(5, 2);
   }
 }, 1000);
+
+function Player(boxHeight, boxWidth) {
+    this.boxHeight = boxHeight;
+    this.boxWidth = boxWidth;
+    this.health = 10;    
+    }
+
+Player.prototype.draw = function() {
+    ctx.fillStyle = "#00FF00";
+    //body
+    ctx.fillRect(250, 180, 190, 150); //main body
+    ctx.fillRect(230, 295, 190, 95); //left bott
+    ctx.fillRect(250, 280, 210, 110); //right bott
+    ctx.fillRect(235, 180, 20, 40); //left top
+    ctx.fillRect(265, 140, 58, 40); //top left
+    ctx.fillRect(380, 130, 40, 60); //top right
+    //legs
+    ctx.fillStyle = "Blue";
+    ctx.fillRect(305, 390, 15, 15); //leg 1
+    ctx.fillRect(255, 405, 65, 10);
+
+    ctx.fillRect(365, 390, 15, 15); //leg 2
+    ctx.fillRect(365, 405, 65, 10);
+
+    //face
+    ctx.fillRect(312, 315, 63, 13); //mouth
+    ctx.fillRect(290, 250, 30, 15); //left eye
+    ctx.fillRect(360, 250, 30, 15); //right eye
+
+    //eyebrows
+    ctx.beginPath();
+    ctx.moveTo(265, 260);
+    ctx.lineTo(260, 250);
+    ctx.lineTo(300, 210);
+    ctx.lineTo(305, 220);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(420, 260);
+    ctx.lineTo(425, 250);
+    ctx.lineTo(375, 210);
+    ctx.lineTo(370, 220);
+    ctx.fill();
+};
+/* test to draw player; need to fix sizing
+var p = new Player(200,200);
+p.draw(); */
