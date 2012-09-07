@@ -237,11 +237,17 @@ Player.prototype.drawMeatwad = function(x, y){
   ball1.draw();
   ball2 = new Circle(ctx2, this.x - 8, this.y - 3, 4, 0, Math.PI * 2,"Black");
   ball2.draw();
+  ctx2.restore();
+}
+
+Player.prototype.moveMeatwad = function (dist) {
+  ctx2.clearRect(this.x - 50, this.y - 50, 100, 100);
+  this.drawMeatwad(this.x + dist, this.y);
 }
 
  // test to draw player; need to fix sizing
-var p = new Player(200,200);
-p.draw();
+var p = new Player();
+p.draw(ctx);
 p.drawMeatwad();
 
 setInterval(function () {
@@ -255,17 +261,14 @@ setInterval(function () {
   }, getRandomInt(1500, 3500));
 }, 2000);
 
-player = new Shape(ctx2, 250, 600, 60, 50, 'red');
-player.draw();
-
 window.addEventListener('keydown', function (e) {
   var defDist = 15;
   switch (e.keyCode) {
     case 39:
-      player.moveRight(defDist);
+      p.moveMeatwad(defDist);
       break;
     case 37:
-      player.moveRight(-1 * defDist);
+      p.moveMeatwad(-1 * defDist);
       break;
     default:
       console.log('no case');
