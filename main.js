@@ -1,4 +1,4 @@
-var canvas, canvas2, ctx, ctx2, windowWidth, windowHeight, canvasWidth, canvasHeight, i, player;
+var canvas, canvas2, ctx, ctx2, windowWidth, windowHeight, canvasWidth, canvasHeight, i, player, circ;
 
 function getRandomInt (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -34,42 +34,46 @@ ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
 // ========= CIRCLES =========
 
-function Circle(ctx, x, y, radius, startAngle, endAngle, fill) {
-  this.ctx = ctx || null;
+function Circle(c, x, y, radius, startAngle, endAngle, fill, forceLegit) {
+  this.c = c || null;
   this.x = x || 0;
   this.y = y || 0;
   this.radius = radius || 1;
   this.startAngle = startAngle || 0;
   this.endAngle = endAngle || Math.PI * 2;
   this.fill = fill || 'white';
+  this.forceLegit = forceLegit || false;
 }
 
 Circle.prototype.draw = function() {
-  this.ctx.save();
-  this.ctx.fillStyle = this.fill;
-  this.ctx.beginPath();
-  this.ctx.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle, true);
-  this.ctx.closePath();
-  this.ctx.fill();
-  this.ctx.restore();
+  this.c.save();
+  this.c.fillStyle = this.fill;
+  this.c.beginPath();
+  this.c.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle, true);
+  this.c.closePath();
+  this.c.fill();
+  this.c.restore();
 }
 
 Circle.prototype.clear = function () {
   var oldFill = this.fill;
   this.fill = 'black';
-  // this.ctx.fillStyle = 'red';
+  // this.c.fillStyle = 'red';
   this.radius += 1;
   this.draw();
   this.fill = oldFill;
-  // this.ctx.fillRect(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+  // this.c.fillRect(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
 }
 
 Circle.prototype.clearLegit = function () {
-  this.ctx.clearRect(this.x, this.y, this.radius * 2, this.radius * 2); 
+  this.c.clearRect(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2); 
 }
 
 Circle.prototype.move = function (x, y, radius) {
-  this.clear();
+  if (this.forceLegit)
+    this.clearLegit();
+  else
+    this.clear();
   this.x = x;
   this.y = y;
   this.radius = radius || this.radius;
@@ -95,8 +99,8 @@ Circle.prototype.fall = function (drop, time) {
 
 // ========= SHAPES =========
 
-function Shape(ctx, x, y, w, h, fill) {
-  this.ctx = ctx || null;
+function Shape(c, x, y, w, h, fill) {
+  this.c = c || null;
   this.x = x || 0;
   this.y = y || 0;
   this.w = w || 1;
@@ -109,12 +113,12 @@ function Shape(ctx, x, y, w, h, fill) {
 }
 
 Shape.prototype.draw = function() {
-  this.ctx.fillStyle = this.fill;
-  this.ctx.fillRect(this.x, this.y, this.w, this.h);
+  this.c.fillStyle = this.fill;
+  this.c.fillRect(this.x, this.y, this.w, this.h);
 }
 
 Shape.prototype.clear = function () {
-  this.ctx.clearRect(this.x, this.y, this.w, this.h);
+  this.c.clearRect(this.x, this.y, this.w, this.h);
 }
 
 Shape.prototype.move = function (x, y, w, h) {
@@ -151,9 +155,9 @@ Shape.prototype.fall = function (drop, time) {
 // make it rain
 setInterval(function () {
   for (i = 0; i < 50; i ++) {
-    var circ = new Circle(ctx, getRandomInt(0, canvasWidth), getRandomInt(0, canvasHeight) - canvasHeight, 2, null, null, 'white');
+    circ = new Circle(ctx, getRandomInt(0, canvasWidth), getRandomInt(0, canvasHeight) - canvasHeight, 2, null, null, 'white');
     circ.draw();
-    circ.fall(5, 15);
+    circ.fall(2, 15);
   }
 }, 2000);
 
@@ -210,3 +214,14 @@ var p = new Player(200,200);
 // ctx2.translate(400, 400);
 // p.draw();
 // ctx2.restore();
+
+setInterval(function () {
+  setTimeout(function () {
+    for (i = 1; i < getRandomInt(1,6); i ++) {
+      // if (i % 2 != 0) continue;
+      circ = new Circle (ctx2, 100 * i + getRandomInt(125, 275), -10, 15, null, null, '#E6BE50', true);
+      circ.draw();
+      circ.fall(2, 12);
+    }
+  }, getRandomInt(2000, 5000));
+}, 2000);
