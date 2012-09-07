@@ -1,4 +1,6 @@
-var canvas, canvas2, ctx, ctx2, windowWidth, windowHeight, canvasWidth, canvasHeight, i, player, circ;
+var canvas, canvas2, ctx, ctx2, windowWidth, windowHeight, canvasWidth, canvasHeight, i, player, circ, prefs;
+
+prefs = {};
 
 function getRandomInt (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -45,7 +47,7 @@ function Circle(c, x, y, radius, startAngle, endAngle, fill, forceLegit) {
   this.forceLegit = forceLegit || false;
 }
 
-Circle.prototype.draw = function() {
+Circle.prototype.draw = function(notAStar) {
   this.c.save();
   this.c.fillStyle = this.fill;
   this.c.beginPath();
@@ -81,10 +83,33 @@ Circle.prototype.move = function (x, y, radius) {
 }
 
 Circle.prototype.moveDown = function (dist) {
+  if (typeof prefs.meatWadX !== "undefined") {
+    if (Math.abs(prefs.meatWadX - this.x) <= 50 && Math.abs(prefs.meatWadY - this.y) <= 50) {
+      clearInterval(this.int_id);
+      this.clearLegit();
+      prefs.meatWad.healthHit();
+      return;
+    }
+  }
   dist = dist || 1;
   this.move(this.x, this.y + dist, this.radius);
   if (this.y > canvasHeight) {
     clearInterval(this.int_id);
+    this.clearLegit();
+  }
+}
+
+Circle.prototype.moveUp = function (dist) {
+  if (Math.abs(prefs.green.x - this.x) <= 50 && prefs.green.y - this.y > 115) {
+    prefs.green.healthHit();
+    clearInterval(this.up_id);
+    this.clearLegit();
+    return;
+  }
+  dist = dist || 1;
+  this.move(this.x, this.y - dist, this.radius);
+  if (this.y < 0) {
+    clearInterval(this.up_id);
     this.clearLegit();
   }
 }
@@ -95,6 +120,14 @@ Circle.prototype.fall = function (drop, time) {
     ptr.moveDown(drop || 100);
   }, time || 1250);
   this.int_id = int_id;
+}
+
+Circle.prototype.fallUp = function (drop, time) {
+  var ptr = this;
+  var up_id = setInterval(function () {
+    ptr.moveUp(drop || 100);
+  }, time || 1250);
+  this.up_id = up_id;
 }
 
 // ========= SHAPES =========
@@ -212,6 +245,8 @@ Player.prototype.draw = function(c) {
 Player.prototype.drawMeatwad = function(x, y){
   this.x = x || canvas2Width/2;
   this.y = y || canvas2Height - 50;
+  prefs.meatWadX = this.x;
+  prefs.meatWadY = this.y;
   ctx2.save();
   ctx2.fillStyle = "Brown";
   var base = new Circle(ctx2, this.x, this.y, 50, 0, 2 * Math.PI, true);
@@ -245,17 +280,33 @@ Player.prototype.moveMeatwad = function (dist) {
   this.drawMeatwad(this.x + dist, this.y);
 }
 
+Player.prototype.healthHit = function () {
+  this.health -= 1;
+  if (this.health <= 0)
+    alert("YOU DEAD");
+}
+
+Player.prototype.shoot = function () {
+  var ct = new Circle(ctx2, this.x, this.y - 60, 10, null, null, 'blue', true);
+  ct.draw();
+  ct.fallUp(2, 8);
+}
+
  // test to draw player; need to fix sizing
+var g = new Player();
 var p = new Player();
-p.draw(ctx);
+g.draw(ctx);
+g.health = 100;
+prefs.green = g;
 p.drawMeatwad();
+prefs.meatWad = p;
 
 setInterval(function () {
   setTimeout(function () {
     for (i = 1; i < getRandomInt(4,9); i ++) {
       // if (i % 2 != 0) continue;
-      circ = new Circle (ctx2, getRandomInt(90, 110) * i, 140, 15, null, null, 'red', true);
-      circ.draw();
+      circ = new Circle (ctx2, getRandomInt(90, 110) * i, 140, 10, null, null, 'red', true);
+      circ.draw(true);
       circ.fall(2, 8);
     }
   }, getRandomInt(1500, 3500));
@@ -269,6 +320,9 @@ window.addEventListener('keydown', function (e) {
       break;
     case 37:
       p.moveMeatwad(-1 * defDist);
+      break;
+    case 32:
+      p.shoot();
       break;
     default:
       console.log('no case');
