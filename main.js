@@ -153,7 +153,7 @@ setInterval(function () {
   for (i = 0; i < 50; i ++) {
     var circ = new Circle(ctx, getRandomInt(0, canvasWidth), getRandomInt(0, canvasHeight) - canvasHeight, 2, null, null, 'white');
     circ.draw();
-    circ.fall(5, 2);
+    circ.fall(5, 15);
   }
 }, 2000);
 
