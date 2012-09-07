@@ -164,42 +164,49 @@ function Player(boxHeight, boxWidth) {
 }
 
 Player.prototype.draw = function() {
-  ctx.fillStyle = "#00FF00";
-  //body
-  ctx.fillRect(250, 180, 190, 150); //main body
-  ctx.fillRect(230, 295, 190, 95); //left bott
-  ctx.fillRect(250, 280, 210, 110); //right bott
-  ctx.fillRect(235, 180, 20, 40); //left top
-  ctx.fillRect(265, 140, 58, 40); //top left
-  ctx.fillRect(380, 130, 40, 60); //top right
-  //legs
-  ctx.fillStyle = "Blue";
-  ctx.fillRect(305, 390, 15, 15); //leg 1
-  ctx.fillRect(255, 405, 65, 10);
+  ctx2.save();
+  // ctx2.scale(.25, .25);
 
-  ctx.fillRect(365, 390, 15, 15); //leg 2
-  ctx.fillRect(365, 405, 65, 10);
+  ctx2.fillStyle = "#00FF00";
+  //body
+  ctx2.fillRect(250, 180, 190, 150); //main body
+  ctx2.fillRect(230, 295, 190, 95); //left bott
+  ctx2.fillRect(250, 280, 210, 110); //right bott
+  ctx2.fillRect(235, 180, 20, 40); //left top
+  ctx2.fillRect(265, 140, 58, 40); //top left
+  ctx2.fillRect(380, 130, 40, 60); //top right
+
+  // //legs
+  ctx2.fillStyle = "Blue";
+  ctx2.fillRect(305, 390, 15, 15); //leg 1
+  ctx2.fillRect(255, 405, 65, 10);
+
+  ctx2.fillRect(365, 390, 15, 15); //leg 2
+  ctx2.fillRect(365, 405, 65, 10);
 
   //face
-  ctx.fillRect(312, 315, 63, 13); //mouth
-  ctx.fillRect(290, 250, 30, 15); //left eye
-  ctx.fillRect(360, 250, 30, 15); //right eye
+  ctx2.fillRect(312, 315, 63, 13); //mouth
+  ctx2.fillRect(290, 250, 30, 15); //left eye
+  ctx2.fillRect(360, 250, 30, 15); //right eye
 
-  //eyebrows
-  ctx.beginPath();
-  ctx.moveTo(265, 260);
-  ctx.lineTo(260, 250);
-  ctx.lineTo(300, 210);
-  ctx.lineTo(305, 220);
-  ctx.fill();
+  // //eyebrows
+  ctx2.lineWidth = 7.5;
+  ctx2.strokeStyle = "Blue";
+  ctx2.beginPath();
+  ctx2.moveTo(265, 260);
+  ctx2.lineTo(305, 220);
+  ctx2.stroke();
 
-  ctx.beginPath();
-  ctx.moveTo(420, 260);
-  ctx.lineTo(425, 250);
-  ctx.lineTo(375, 210);
-  ctx.lineTo(370, 220);
-  ctx.fill();
+  ctx2.beginPath();
+  ctx2.moveTo(420, 260);
+  ctx2.lineTo(370, 220);
+  ctx2.stroke();
+
+  ctx2.restore();
 };
-/* test to draw player; need to fix sizing
+ // test to draw player; need to fix sizing
 var p = new Player(200,200);
-p.draw(); */
+// ctx2.save();
+// ctx2.translate(400, 400);
+// p.draw();
+// ctx2.restore();
