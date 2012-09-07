@@ -26,7 +26,7 @@ ctx.save();
 
 ctx.fillStyle = 'black';
 
-ctx.save()
+ctx.save();
 
 ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
