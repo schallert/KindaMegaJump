@@ -100,7 +100,7 @@ Circle.prototype.moveDown = function (dist) {
 }
 
 Circle.prototype.moveUp = function (dist) {
-  if (Math.abs(prefs.green.x - this.x) <= 50 && prefs.green.y - this.y > 115) {
+  if (Math.abs(prefs.green.x - this.x) <= 80 && prefs.green.y - this.y > 115) {
     prefs.green.healthHit();
     clearInterval(this.up_id);
     this.clearLegit();
@@ -278,20 +278,28 @@ Player.prototype.drawMeatwad = function(x, y, meatWad){
 
 Player.prototype.moveMeatwad = function (dist) {
   ctx2.clearRect(this.x - 50, this.y - 50, 100, 100);
-  this.drawMeatwad(this.x + dist, this.y);
+  this.drawMeatwad(this.x + dist, this.y, true);
 }
 
 Player.prototype.healthHit = function (noHit) {
+  ctx2.save();
   if (!noHit)
     this.health -= 1;
   if (this.meatWad) {
-    ctx2.clearRect(425, 10, 150, 125);
+    ctx2.clearRect(425, 10, 150, 150);
     ctx2.font = "100px sans-serif";
     ctx2.fillStyle = "blue";
     ctx2.fillText(p.health, 425, 100);
   }
-  // if (this.health <= 0)
-    // alert("YOU DEAD");
+   if (prefs.meatWad.health <= 0) 
+   {
+     alert("YOU DEAD");
+   }
+   if (prefs.green.health <= 0)
+   {
+      alert("YOU WIN!!!")
+   }
+   ctx2.restore();
 }
 
 Player.prototype.shoot = function () {
