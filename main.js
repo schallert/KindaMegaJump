@@ -1,4 +1,4 @@
-var canvas, canvas2, ctx, ctx2, windowWidth, windowHeight, canvasWidth, canvasHeight, i, player;
+var canvas, canvas2, ctx, ctx2, windowWidth, windowHeight, canvasWidth, canvasHeight, i, player, circ;
 
 function getRandomInt (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -34,43 +34,46 @@ ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
 // ========= CIRCLES =========
 
-function Circle(ctx, x, y, radius, startAngle, endAngle, fill) {
-  this.ctx = ctx || null;
+function Circle(c, x, y, radius, startAngle, endAngle, fill, forceLegit) {
+  this.c = c || null;
   this.x = x || 0;
   this.y = y || 0;
   this.radius = radius || 1;
   this.startAngle = startAngle || 0;
   this.endAngle = endAngle || Math.PI * 2;
   this.fill = fill || 'white';
+  this.forceLegit = forceLegit || false;
 }
 
-
 Circle.prototype.draw = function() {
-  this.ctx.save();
-  this.ctx.fillStyle = this.fill;
-  this.ctx.beginPath();
-  this.ctx.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle, true);
-  this.ctx.closePath();
-  this.ctx.fill();
-  this.ctx.restore();
+  this.c.save();
+  this.c.fillStyle = this.fill;
+  this.c.beginPath();
+  this.c.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle, true);
+  this.c.closePath();
+  this.c.fill();
+  this.c.restore();
 }
 
 Circle.prototype.clear = function () {
   var oldFill = this.fill;
   this.fill = 'black';
-  // this.ctx.fillStyle = 'red';
+  // this.c.fillStyle = 'red';
   this.radius += 1;
   this.draw();
   this.fill = oldFill;
-  // this.ctx.fillRect(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+  // this.c.fillRect(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
 }
 
 Circle.prototype.clearLegit = function () {
-  this.ctx.clearRect(this.x, this.y, this.radius * 2, this.radius * 2); 
+  this.c.clearRect(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2); 
 }
 
 Circle.prototype.move = function (x, y, radius) {
-  this.clear();
+  if (this.forceLegit)
+    this.clearLegit();
+  else
+    this.clear();
   this.x = x;
   this.y = y;
   this.radius = radius || this.radius;
@@ -96,8 +99,8 @@ Circle.prototype.fall = function (drop, time) {
 
 // ========= SHAPES =========
 
-function Shape(ctx, x, y, w, h, fill) {
-  this.ctx = ctx || null;
+function Shape(c, x, y, w, h, fill) {
+  this.c = c || null;
   this.x = x || 0;
   this.y = y || 0;
   this.w = w || 1;
@@ -110,12 +113,12 @@ function Shape(ctx, x, y, w, h, fill) {
 }
 
 Shape.prototype.draw = function() {
-  this.ctx.fillStyle = this.fill;
-  this.ctx.fillRect(this.x, this.y, this.w, this.h);
+  this.c.fillStyle = this.fill;
+  this.c.fillRect(this.x, this.y, this.w, this.h);
 }
 
 Shape.prototype.clear = function () {
-  this.ctx.clearRect(this.x, this.y, this.w, this.h);
+  this.c.clearRect(this.x, this.y, this.w, this.h);
 }
 
 Shape.prototype.move = function (x, y, w, h) {
@@ -157,52 +160,53 @@ for (i = 0; i < 2500; i ++) {
                         // and it was too laggy / barely worked on firefox
 }
 
-
 function Player(x, y) {
-  this.health = 10;
   this.x = x || 250;
   this.y = y || 250;
+  this.health = 10;
 }
 
-<<<<<<< HEAD
-Player.prototype.draw = function() {
-  ctx2.save();
-  ctx2.fillStyle = "#00FF00";
-  ctx2.fillRect(250, 130, 230, 260); //whole box
-  ctx2.clearRect(250, 220, 20, 75); //clear left mid
-  ctx2.clearRect(250, 130, 30, 50); //clear left top
-  ctx2.clearRect(250, 130, 5, 95); //trim left
-  ctx2.clearRect(460, 130, 20, 150); //clear right
-  ctx2.clearRect(440, 130, 20, 50); //clear top right
-  ctx2.clearRect(340, 130, 60, 50); //clear top mid
-  ctx2.clearRect(280, 130, 60, 10); //trim top left
+Player.prototype.draw = function(c) {
+  c.save();
+  c.scale(1, .45);
+  c.translate(-80, -100);
 
-  ctx2.fillStyle = "Blue";
-  ctx2.fillRect(325, 390, 15, 15); //leg 1
-  ctx2.fillRect(275, 405, 65, 10);
+  c.fillStyle = "#00FF00";
+  //body
+  c.fillRect(250, 180, 190, 150); //main body
+  c.fillRect(230, 295, 190, 95); //left bott
+  c.fillRect(250, 280, 210, 110); //right bott
+  c.fillRect(235, 180, 20, 40); //left top
+  c.fillRect(265, 140, 58, 40); //top left
+  c.fillRect(380, 130, 40, 60); //top right
 
-  ctx2.fillRect(385, 390, 15, 15); //leg 2
-  ctx2.fillRect(385, 405, 65, 10);
+  // //legs
+  c.fillStyle = "Blue";
+  c.fillRect(305, 390, 15, 15); //leg 1
+  c.fillRect(255, 405, 65, 10);
+
+  c.fillRect(365, 390, 15, 15); //leg 2
+  c.fillRect(365, 405, 65, 10);
 
   //face
-  ctx2.fillRect(332, 315, 63, 13); //mouth
-  ctx2.fillRect(310, 250, 30, 15); //left eye
-  ctx2.fillRect(380, 250, 30, 15); //right eye
+  c.fillRect(312, 315, 63, 13); //mouth
+  c.fillRect(290, 250, 30, 15); //left eye
+  c.fillRect(360, 250, 30, 15); //right eye
 
   // //eyebrows
-  ctx2.lineWidth = 7.5;
-  ctx2.strokeStyle = "Blue";
-  ctx2.beginPath();
-  ctx2.moveTo(285, 260);
-  ctx2.lineTo(325, 220);
-  ctx2.stroke();
+  c.lineWidth = 7.5;
+  c.strokeStyle = "Blue";
+  c.beginPath();
+  c.moveTo(265, 260);
+  c.lineTo(305, 220);
+  c.stroke();
 
-  ctx2.beginPath();
-  ctx2.moveTo(440, 260);
-  ctx2.lineTo(390, 220);
-  ctx2.stroke();
+  c.beginPath();
+  c.moveTo(420, 260);
+  c.lineTo(370, 220);
+  c.stroke();
 
-  ctx2.restore();
+  c.restore();
 };
 
 Player.prototype.drawMeatwad = function(x, y){
@@ -237,11 +241,8 @@ Player.prototype.drawMeatwad = function(x, y){
 
  // test to draw player; need to fix sizing
 var p = new Player(200,200);
- //ctx2.save();
-// ctx2.translate(400, 400);
 p.draw();
 p.drawMeatwad();
-// ctx2.restore();
 
 setInterval(function () {
   setTimeout(function () {
