@@ -44,6 +44,7 @@ function Circle(ctx, x, y, radius, startAngle, endAngle, fill) {
   this.fill = fill || 'white';
 }
 
+
 Circle.prototype.draw = function() {
   this.ctx.save();
   this.ctx.fillStyle = this.fill;
@@ -158,9 +159,7 @@ setInterval(function () {
 }, 2000);
 
 
-function Player(boxHeight, boxWidth, x, y) {
-  this.boxHeight = boxHeight;
-  this.boxWidth = boxWidth;
+function Player(x, y) {
   this.health = 10;
   this.x = x || 250;
   this.y = y || 250;
@@ -168,7 +167,6 @@ function Player(boxHeight, boxWidth, x, y) {
 
 Player.prototype.draw = function() {
   ctx2.save();
-  // ctx2.scale(.25, .25);
   ctx2.fillStyle = "#00FF00";
   ctx2.fillRect(250, 130, 230, 260); //whole box
   ctx2.clearRect(250, 220, 20, 75); //clear left mid
@@ -207,9 +205,40 @@ Player.prototype.draw = function() {
   ctx2.restore();
 };
 
+Player.prototype.drawMeatwad = function(x, y){
+  this.x = x || canvas2Width/2;
+  this.y = y || canvas2Height - 50;
+  ctx2.save();
+  ctx2.fillStyle = "Brown";
+  var base = new Circle(ctx2, this.x, this.y, 50, 0, 2 * Math.PI, true);
+  base.draw();
+  ctx2.beginPath();
+  ctx2.lineWidth = 3.0;
+  ctx2.arc(this.x - 3, this.y + 8, 20, .7 * Math.PI, 1.7 * Math.PI, true);
+  ctx2.stroke(); //smile
+
+  ctx2.strokeStyle = "White";
+  ctx2.lineWidth = 4.0;
+  ctx2.beginPath();
+  ctx2.moveTo(this.x + 21, this.y + 10);
+  ctx2.lineTo(this.x + 18, this.y + 20);
+  ctx2.stroke(); //tooth
+
+  var eye1, eye2, ball1, ball2;
+  eye1 = new Circle(ctx2, this.x - 23, this.y - 2, 6);
+  eye1.draw();
+  eye2 = new Circle(ctx2, this.x - 6, this.y - 2, 6);
+  eye2.draw();
+  ball1 = new Circle(ctx2, this.x - 25, this.y - 3, 4, 0, Math.PI * 2,"Black");
+  ball1.draw();
+  ball2 = new Circle(ctx2, this.x - 8, this.y - 3, 4, 0, Math.PI * 2,"Black");
+  ball2.draw();
+}
+
  // test to draw player; need to fix sizing
 var p = new Player(200,200);
  //ctx2.save();
 // ctx2.translate(400, 400);
 p.draw();
+p.drawMeatwad();
 // ctx2.restore();
