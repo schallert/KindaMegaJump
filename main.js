@@ -150,12 +150,12 @@ Shape.prototype.fall = function (drop, time) {
 
 // make it rain
 setInterval(function () {
-  for (i = 0; i < 100; i ++) {
-    var circ = new Circle(ctx, getRandomInt(0, canvasWidth), getRandomInt(0, canvasHeight) - 800, 2, null, null, 'white');
+  for (i = 0; i < 50; i ++) {
+    var circ = new Circle(ctx, getRandomInt(0, canvasWidth), getRandomInt(0, canvasHeight) - canvasHeight, 2, null, null, 'white');
     circ.draw();
     circ.fall(5, 2);
   }
-}, 1000);
+}, 2000);
 
 function Player(boxHeight, boxWidth) {
   this.boxHeight = boxHeight;
